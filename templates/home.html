@@ -1,0 +1,7 @@
+{% for row in images %}
+<img src={{row.filename}}/>
+{% endfor %}
+<form method="post" enctype="multipart/form-data">
+<input type="file" name="file" id="file"/>
+<input type="Submit" value="Go">
+</form>
