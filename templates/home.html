@@ -1,7 +1,14 @@
-{% for row in images %}
-<img src={{row.filename}}/>
-{% endfor %}
+<div style="padding: 48px; border-radius: 24px; border: solid 1px lightgray;">
 <form method="post" enctype="multipart/form-data">
-<input type="file" name="file" id="file"/>
-<input type="Submit" value="Go">
+<input type="file" name="file" id="file" accept="image/*"/>
+<input type="Submit" value="Dodaj">
+</div>
+<div style="display: grid; grid-template-columns: auto auto auto;">
+{% for row in images %}
+<div><img style="max-width:100%" src={{row.filename}}/></div>
+{% endfor %}
+</div>
+{%if images|length == 0 %}
+<p>Pusto!</p>
+{% endif %}
 </form>
