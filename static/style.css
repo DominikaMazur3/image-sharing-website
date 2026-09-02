@@ -1,0 +1,13 @@
+#upload_button {
+    padding:24px;
+    border: none;
+    border-radius: 12px;
+    background-color: teal;
+    margin-left: 4px;
+}
+
+#search_button {
+    padding:24px;
+    border: solid 1px lightgray;
+    border-radius: 0px 12px 12px 0px;
+}

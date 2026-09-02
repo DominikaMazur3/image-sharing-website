@@ -1,14 +1,21 @@
-<div style="padding: 48px; border-radius: 24px; border: solid 1px lightgray;">
-<form method="post" enctype="multipart/form-data">
-<input type="file" name="file" id="file" accept="image/*"/>
-<input type="Submit" value="Dodaj">
+<link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+<div style="padding: 24px; border-bottom: 1px solid gray; display: flex;">
+<div style="display:flex; flex-grow:1;">
+<form action="/search" method="get" style="flex-grow:1; display:flex;">
+<input type="search" name="word" id="word" style="flex-grow: 1;" placeholder="Wyszukaj..."></input>
+<input id="search_button" type="Submit" value="Szukaj"/>
+</form>
 </div>
+<div>
+<form action="/upload"><input id="upload_button" type="submit" value="Dodaj obraz"/></form>
+</div>
+</div>
+
 <div style="display: grid; grid-template-columns: auto auto auto;">
 {% for row in images %}
-<div><img style="max-width:100%" src={{row.filename}}/></div>
+<div><img style="max-width:100%" src="{{url_for('static', filename=row.filename)}}"/></div>
 {% endfor %}
 </div>
 {%if images|length == 0 %}
 <p>Pusto!</p>
 {% endif %}
-</form>
