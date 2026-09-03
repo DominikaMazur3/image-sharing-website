@@ -1,15 +1,12 @@
-<form action="/search" method="get">
-<input name="word" id="word"></input>
-<input type="Submit" value="Szukaj"/>
-</form>
-<form action="/upload"><input type="submit" value="Dodaj obraz"/></form>
-<div style="padding: 48px; border-radius: 24px; border: solid 1px lightgray;">
+{% extends "base.html" %}
+{% block main %}
 <form method="post" enctype="multipart/form-data"/>
 <label for="file">Wybierz obraz:</label><br>
 <input type="file" name="file" id="file" accept="image/*" required/><br>
 <label for="file">Dodaj opis:</label><br>
-<p>Opisy są wykorzystywane przy wyszukiwaniu.</p>
+<p>Opisy są wykorzystywane przy wyszukiwaniu obrazów. Uwzględnij wszystkie słowa, które mogą być przydatne ^^</p>
 <input name="desc" id="desc"></input><br>
 <input type="Submit" value="Dodaj">
 </div>
 </form>
+{% endblock %}

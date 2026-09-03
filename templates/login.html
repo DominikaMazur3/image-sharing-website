@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+<form method="post" action="/register">
+<input name="username"></input>
+<input type="password" name="password"></input>
+<input type="submit" value="Utwórz konto"></input>
+</form>
+
+<form method="post" action="/login">
+<input name="username"></input>
+<input type="password" name="password"></input>
+<input type="submit" value="Zaloguj się"></input>
+</form>
+{% endblock %}
