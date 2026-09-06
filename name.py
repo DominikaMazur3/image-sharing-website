@@ -18,11 +18,13 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
     password = db.Column(db.String(512), nullable=False)
+    uploaded_images = db.relationship('Image', backref='user')
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(256))
     date_uploaded = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    uploaded_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     description = db.Column(db.String(1024))
     def __repr__(self):
         return 'Image ' + self.filename
@@ -38,6 +40,8 @@ def load_user(user_id):
 def register():
     username = request.form["username"]
     password = request.form["password"]
+    if username == '' or password == '':
+        return redirect(url_for('main_gallery'))
     hashed = argon2.generate_password_hash(password)
     new_user = User(username=username,password=hashed)
     db.session.add(new_user)
@@ -63,7 +67,9 @@ def logout():
 
 @app.route("/")
 def main_gallery():
-    return render_template('home.html', images=Image.query.all())
+    select_command = db.select(Image.filename, Image.date_uploaded, User.username).select_from(Image).join(User)
+    images = db.session.execute(select_command).all()
+    return render_template('home.html', images=images)
 
 @app.route("/upload_error")
 def upload_error():
@@ -81,7 +87,7 @@ def upload_screen():
             return redirect(url_for('upload_error'))
         new_filename = secure_filename(uploaded.filename)
         uploaded.save('static/uploaded/' + new_filename)
-        db.session.add(Image(filename="uploaded/"+new_filename, description=request.form['desc']))
+        db.session.add(Image(filename="uploaded/"+new_filename, description=request.form['desc'], uploaded_by=current_user.id))
         db.session.commit()
         return redirect(url_for('main_gallery'))
     return render_template('upload.html', images=Image.query.all())
@@ -92,6 +98,13 @@ def show_results():
     if word == "":
          return redirect(url_for('main_gallery'))
     return render_template('home.html', images=Image.query.filter(Image.description.like("%"+word+"%")).all())
+
+@app.route("/<name>")
+def user_gallery(name):
+    user = User.query.filter_by(username=name).scalar()
+    if user is None:
+        return "User doesn't exist"
+    return render_template('home.html', images=Image.query.filter_by(uploaded_by=user.id).all())
 
 if __name__ == "__main__":
     app.run(debug=True)
