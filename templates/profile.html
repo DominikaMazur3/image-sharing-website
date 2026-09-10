@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>Profil użytkownika {{ username }}</h1>
+<div style="display: grid; grid-template-columns: auto auto auto;">
+{% for row in images %}
+<div style="padding:4px;">
+<img style="max-width:100%" src="{{url_for('static', filename=row.filename)}}"/>
+<table style="width:100%;">
+<td>
+<p>{{ row.date_uploaded.strftime('%d %b %y %H:%M') }}</p>
+</td>
+<td style="text-align:right;">
+<a href="/{{ row.username }}">{{ row.username }}</a>
+</td>
+</table>
+</div>
+{% endfor %}
+</div>
+{% if images|length == 0 %}
+<p>Ten użytkownik nie przesłał jeszcze żadnych obrazów.</p>
+{% endif %}
+{% endblock %}

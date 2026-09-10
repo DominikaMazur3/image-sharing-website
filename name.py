@@ -97,14 +97,16 @@ def show_results():
     word = request.args.get('word')
     if word == "":
          return redirect(url_for('main_gallery'))
-    return render_template('home.html', images=Image.query.filter(Image.description.like("%"+word+"%")).all())
+    select_command = db.select(Image.filename, Image.date_uploaded, User.username, Image.description).select_from(Image).join(User).filter(Image.description.like("%"+word+"%"))
+    result = db.session.execute(select_command).all()
+    return render_template('home.html', images=result)
 
 @app.route("/<name>")
 def user_gallery(name):
     user = User.query.filter_by(username=name).scalar()
     if user is None:
         return "User doesn't exist"
-    return render_template('home.html', images=Image.query.filter_by(uploaded_by=user.id).all())
+    return render_template('profile.html', images=Image.query.filter_by(uploaded_by=user.id).all(),username=user.username)
 
 if __name__ == "__main__":
     app.run(debug=True)
