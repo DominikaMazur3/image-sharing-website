@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import *
 from flask_argon2 import Argon2
@@ -41,7 +41,8 @@ def register():
     username = request.form["username"]
     password = request.form["password"]
     if username == '' or password == '':
-        return redirect(url_for('main_gallery'))
+        flash('Login i hasło nie mogą być puste')
+        return redirect(url_for('login_register_screen'))
     hashed = argon2.generate_password_hash(password)
     new_user = User(username=username,password=hashed)
     db.session.add(new_user)
@@ -54,7 +55,8 @@ def login():
     password = request.form["password"]
     user = User.query.filter_by(username=login_username).scalar()
     if user is None:
-        return "no user"
+        flash('Konto nie istnieje')
+        return redirect(url_for('login_register_screen'))
     if argon2.check_password_hash(user.password,password):
         login_user(user)
     return redirect(url_for('main_gallery'))
@@ -107,6 +109,19 @@ def user_gallery(name):
     if user is None:
         return "User doesn't exist"
     return render_template('profile.html', images=Image.query.filter_by(uploaded_by=user.id).all(),username=user.username)
+
+@app.route("/delete_image/<image_id>")
+@login_required
+def delete_image_by_id(image_id):
+    to_delete = Image.query.filter(Image.id == image_id)
+    if to_delete.scalar() is None:
+        return "can't delete"
+    if to_delete.scalar().uploaded_by == current_user.id:
+        to_delete.delete()
+        db.session.commit()
+        return "deleted"
+    else:
+        return "can't delete"
 
 if __name__ == "__main__":
     app.run(debug=True)

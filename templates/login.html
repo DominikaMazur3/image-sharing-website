@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% block main %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="message_box">
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 <form method="post" action="/register">
 <input name="username"></input>
 <input type="password" name="password"></input>
