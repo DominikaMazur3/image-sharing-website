@@ -9,15 +9,21 @@
 </div>
 {% endif %}
 {% endwith %}
+<div style="display: flex; width:100%; justify-content: center;">
+<div style="padding: 24px; margin: 24px; width:40%; display: inline-block; border: 1px solid gray;">
 <form method="post" action="/register">
-<input name="username"></input>
-<input type="password" name="password"></input>
-<input type="submit" value="Utwórz konto"></input>
+<input class="login_input" name="username"></input>
+<input class="login_input" type="password" name="password"></input>
+<input class="common_button login_button" type="submit" value="Utwórz konto"></input>
 </form>
+</div>
 
+<div style="padding: 24px; margin: 24px; width:40%; display: inline-block; border: 1px solid gray;">
 <form method="post" action="/login">
-<input name="username"></input>
-<input type="password" name="password"></input>
-<input type="submit" value="Zaloguj się"></input>
+<input class="login_input" name="username"></input>
+<input class="login_input" type="password" name="password"></input>
+<input class="common_button login_button" type="submit" value="Zaloguj się"></input>
 </form>
+</div>
+</div>
 {% endblock %}

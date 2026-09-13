@@ -14,11 +14,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 argon2 = Argon2(app)
 
+favorite_images = db.Table("favorite_images", db.Column("user_id", db.Integer, db.ForeignKey("user.id")), db.Column("image_id", db.Integer, db.ForeignKey("image.id")))
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128))
     password = db.Column(db.String(512), nullable=False)
     uploaded_images = db.relationship('Image', backref='user')
+    favorites = db.relationship("Image", secondary=favorite_images, back_populates="user_favorites")
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +29,7 @@ class Image(db.Model):
     date_uploaded = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     uploaded_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     description = db.Column(db.String(1024))
+    user_favorites = db.relationship("User", secondary=favorite_images, back_populates="favorites")
     def __repr__(self):
         return 'Image ' + self.filename
 
@@ -119,7 +123,7 @@ def delete_image_by_id(image_id):
     if to_delete.scalar().uploaded_by == current_user.id:
         to_delete.delete()
         db.session.commit()
-        return "deleted"
+        return redirect("/" + current_user.username)
     else:
         return "can't delete"
 

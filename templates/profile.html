@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block main %}
 <h1>Profil użytkownika {{ username }}</h1>
+<p>{{ images|length }} przesłanych obrazów</p>
 <div style="display: grid; grid-template-columns: auto auto auto;">
 {% for row in images %}
 <div style="padding:4px;">
@@ -10,7 +11,11 @@
 <p>{{ row.date_uploaded.strftime('%d %b %y %H:%M') }}</p>
 </td>
 <td style="text-align:right;">
-<a href="/{{ row.username }}">{{ row.username }}</a>
+{% if current_user.is_authenticated %}
+{% if current_user.id == row.uploaded_by %}
+<a href="/delete_image/{{ row.id }}"><button class="common_button delete_button">Usuń</button></a>
+{% endif %}
+{% endif %}
 </td>
 </table>
 </div>
