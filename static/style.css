@@ -1,3 +1,7 @@
+:root {
+    --main-color: orange;
+}
+
 .common_button {
     padding:24px;
     border: solid 1px lightgray;
@@ -5,14 +9,49 @@
     cursor: pointer;
 }
 
+.common_button:hover
+{
+    background-color: var(--main-color);
+}
+
 .color_button {
     border: none;
     border-radius: 12px;
-    background-color: teal;
+    background-color: var(--main-color);
+    color: white;
+}
+
+.delete_button {
+    background-color: red;
+    border: solid 1px lightgray;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.message_box {
+    padding:12px;
+    border: solid 1px lightgray;
+    border-radius: 12px;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
 
 .top_div {
     margin-left: 4px;
+}
+
+.login_input {
+    font-size: 20pt;
+    width: 100%;
+    margin-bottom: 24px;
+    padding: 12px;
+}
+
+.login_button {
+    width: 100%;
 }
 
 #search_button {
